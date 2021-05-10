@@ -6,6 +6,7 @@ public class Main {
         grid.addCell(new Cell(0,0,CellState.ELECTRONHEAD));
         grid.addCell(new Cell(1,0,CellState.ELECTRONHEAD));
         grid.addCell(new Cell(2,0,CellState.ELECTRONHEAD));
+        grid.addCell(new Cell(2,2,CellState.ELECTRONHEAD));
         grid.nextIteration();
         System.out.println(grid);
     }

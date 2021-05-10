@@ -9,6 +9,10 @@ public class Grid {
         grid = new HashMap<>();
     }
 
+    public Grid(HashMap<Coords, Cell> grid) {
+        this.grid = grid;
+    }
+
     public HashMap<Coords, Cell> getGrid() {
         return grid;
     }

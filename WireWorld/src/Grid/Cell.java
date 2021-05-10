@@ -15,6 +15,10 @@ public class Cell {
         nghbrs = 0;
     }
 
+    public Cell(Coords coords) {
+        this(coords, CellState.CONDUCTOR);
+    }
+
     public Coords getCoords() {
         return coords;
     }
