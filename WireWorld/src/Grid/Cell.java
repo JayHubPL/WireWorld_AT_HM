@@ -10,9 +10,7 @@ public class Cell {
     }
 
     public Cell(int x, int y, CellState cellState) {
-        this.coords = new Coords(x, y);
-        this.cellState = cellState;
-        nghbrs = 0;
+        this(new Coords(x, y), cellState);
     }
 
     public Cell(Coords coords) {
