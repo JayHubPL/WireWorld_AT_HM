@@ -1,18 +1,21 @@
 package gui_test;
 
 import Grid.Grid;
+import GridObjects.GridObjects;
+import TxtIO.TxtIO;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
 public class test2 extends JFrame {
-    private JLabel title, authors;
+    private JLabel title, authors, loaded;
     private JPanel toolBar, tHeader, gridPanel;
     private JTextField nrIterations;
     private JButton start, run, save, load, reset, next;
@@ -93,7 +96,7 @@ public class test2 extends JFrame {
 
 
     private void initializeFrame(){
-        setSize(400, 500);
+        setSize(400, 600);
         setTitle("WireWorld");
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -171,7 +174,25 @@ public class test2 extends JFrame {
         load.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                    File picked = fileChooser.getSelectedFile();
+                    File input = fileChooser.getSelectedFile();
+                    try {
+                        GridObjects gridObjects = TxtIO.readFromTxt(input.getPath());
+                        System.out.println("\nWczytane obiekty:\n");
+                        System.out.println(gridObjects);
+
+                        //DLACZEGO TO NIE DZIAŁA??? (nie wyświetla się label)
+                        loaded = new JLabel();
+                        loaded.setText("wczytano z pliku:"+ input.getPath());
+                        loaded.setForeground(Color.BLACK);
+                        loaded.setFont(new Font("Arial", Font.PLAIN, 20));
+                        loaded.setOpaque(true);
+                        loaded.setBounds(10, 500,150, 50);
+                        add(loaded);
+
+                    } catch (FileNotFoundException ex) {
+                        ex.printStackTrace();
+                    }
+
                    //załadowanie pliku do struktury
                 }
             }
