@@ -1,17 +1,35 @@
 package gui_test;
 
+import Grid.Grid;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class test2 {
-    JLabel title;
-    JLabel authors;
-    JPanel toolBar;
-    JPanel tHeader;
-    JPanel gridPanel;
-    JFrame frame;
-        test2() {
-            title = new JLabel();
+
+public class test2 extends JFrame {
+    private JLabel title, authors;
+    private JPanel toolBar, tHeader, gridPanel;
+    private JTextField nrIterations;
+    private JButton start, run, save, load, reset, next;
+    private final JFileChooser fileChooser = new JFileChooser();
+    private Color clr = new Color(255, 0, 0);
+    private Grid grid;
+    private
+
+    test2() {
+
+
+        initializeFrame();
+        initializeMenu();
+        initializeGrid();
+
+
+           /* title = new JLabel();
             title.setText("WireWorld");
             title.setHorizontalTextPosition(JLabel.CENTER);
             title.setForeground(Color.BLACK);
@@ -31,6 +49,16 @@ public class test2 {
             authors.setVerticalAlignment(JLabel.TOP);
             authors.setHorizontalAlignment(JLabel.RIGHT);
 
+            run =new JButton();
+            run.setBounds(100, 400, 100, 75);
+            run.setText("RUN");
+            run.setVerticalAlignment(JLabel.BOTTOM);
+            run.setHorizontalAlignment(JLabel.CENTER);
+
+            inField = new JTextField();
+           // inField.setHorizontalAlignment(JLabel.LEFT);
+            inField.setBounds(0,450,175,50);
+
             tHeader = new JPanel();
             tHeader.setBackground(new Color(116, 179, 212));
             tHeader.setBounds(0, 0, 400, 50);
@@ -46,22 +74,119 @@ public class test2 {
             toolBar = new JPanel();
             toolBar.setBackground(new Color(116, 179, 212));
             toolBar.setBounds(0, 450, 400, 50);
-            //toolBar.setLayout((new BorderLayout()));
+            toolBar.setLayout((new FlowLayout()));
+            toolBar.add(run);
+            toolBar.add(inField);
+
+            this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+           // this.setSize(400, 500);
+           // this.setResizable(false);
+            this.setVisible(true);
+            this.add(tHeader);
+            this.add(gridPanel);
+            this.add(toolBar);
+            //this.add(inField);
+            this.pack();*/
+
+    }
 
 
-            frame = new JFrame();
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(400, 500);
-            frame.setResizable(false);
-            frame.setVisible(true);
-            frame.add(tHeader);
-            frame.add(gridPanel);
-            frame.add(toolBar);
-            //frame.add(authors);
-            //frame.add(title);
-            //frame.pack();
-        }
+
+    private void initializeFrame(){
+        setSize(400, 500);
+        setTitle("WireWorld");
+        setResizable(false);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(null);
+        setVisible(true);
+    }
+
+    private void initializeMenu(){
+
+        start = new JButton("Start");
+        start.setBackground(new Color(21, 158, 23));
+        start.setForeground(Color.white);
+        start.setBounds(10, 300, 75, 50);
+        start.setFocusPainted(false);
+        start.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //uruchomienie programu
+            }
+        });
+        add(start);
+
+        //następna iteracja
+        next = new JButton("następna iteracja");
+        next.setBackground(Color.MAGENTA);
+        next.setForeground(Color.white);
+        next.setBounds(95, 300, 150, 50);
+        next.setFocusPainted(false);
+        next.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //grid.nextIteration();
+            }
+        });
+        add(next);
+
+        //reset
+        reset = new JButton("reset");
+        reset.setBackground(clr);
+        reset.setForeground(Color.white);
+        reset.setBounds(255, 300, 115 , 50);
+        reset.setFocusPainted(false);
+        reset.setHorizontalTextPosition(JButton.CENTER);
+        reset.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //co sie dzieje po resecie - wartosci z powrotem na domyślne
+            }
+        });
+        add(reset);
+
+        //wczytywanie z pliku
+        load = new JButton("Wczytaj");
+        load.setBackground(Color.BLUE);
+        load.setForeground(Color.white);
+        load.setBounds(10, 375, 100, 50);
+        load.setFocusPainted(false);
+        load.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                    File picked = fileChooser.getSelectedFile();
+                   //załadowanie pliku do struktury
+                }
+            }
+        });
+        add(load);
+
+        //zapis do pliku
+        save = new JButton("Zapisz");
+        save.setBackground(Color.BLUE);
+        save.setForeground(Color.white);
+        save.setBounds(270, 375, 100, 50);
+        save.setFocusPainted(false);
+        save.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+                    File save = fileChooser.getSelectedFile();
+                    //zapis do pliku
+                }
+            }
+        });
+        add(save);
+
+    }
+
+    private void initializeGrid(){
+
+    }
 
     public static void main(String args[]) {
+        new test2();
+
     }
 }
