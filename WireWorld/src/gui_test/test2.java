@@ -99,6 +99,23 @@ public class test2 extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(null);
         setVisible(true);
+
+        title = new JLabel();
+        title.setText("WireWorld");
+        title.setForeground(Color.BLACK);
+        title.setFont(new Font("Arial", Font.BOLD, 20));
+        //title.setBackground(new Color(116, 179, 212));
+        title.setOpaque(true);
+        title.setBounds(150, 10,100, 50);
+        add(title);
+
+        authors = new JLabel();
+        authors.setForeground(Color.BLACK);
+        authors.setFont(new Font("Arial", Font.PLAIN, 8));
+        authors.setText("Amelia Tabor i Hubert Mazur");
+        authors.setBounds(260, 13,120, 50);
+        add(authors);
+
     }
 
     private void initializeMenu(){
