@@ -15,21 +15,22 @@ import java.util.logging.Logger;
 
 
 public class test2 extends JFrame {
-    private JLabel title, authors, loaded;
+    private JLabel title, authors, loaded, saved, iterations, messeges;
     private JPanel toolBar, tHeader, gridPanel;
     private JTextField nrIterations;
     private JButton start, run, save, load, reset, next;
     private final JFileChooser fileChooser = new JFileChooser();
     private Color clr = new Color(255, 0, 0);
     private Grid grid;
-    private
+    private JTextField numberIt;
 
     test2() {
 
 
         initializeFrame();
-        initializeMenu();
         initializeGrid();
+        initializeMenu();
+
 
 
            /* title = new JLabel();
@@ -96,7 +97,7 @@ public class test2 extends JFrame {
 
 
     private void initializeFrame(){
-        setSize(400, 600);
+        setSize(450, 600);
         setTitle("WireWorld");
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -116,17 +117,26 @@ public class test2 extends JFrame {
         authors.setForeground(Color.BLACK);
         authors.setFont(new Font("Arial", Font.PLAIN, 8));
         authors.setText("Amelia Tabor i Hubert Mazur");
-        authors.setBounds(260, 13,120, 50);
+        authors.setBounds(260, 13,120, 20);
         add(authors);
+
 
     }
 
+    private void initializeGrid(){
+        gridPanel = new JPanel();
+        gridPanel.setBackground(Color.black);
+        gridPanel.setBounds(30, 75, 375, 200);
+        //gridPanel.setLayout((new BorderLayout()));
+        gridPanel.setVisible(true);
+        add(gridPanel);
+    }
     private void initializeMenu(){
 
         start = new JButton("Start");
         start.setBackground(new Color(21, 158, 23));
         start.setForeground(Color.white);
-        start.setBounds(10, 300, 75, 50);
+        start.setBounds(55, 300, 75, 50);
         start.setFocusPainted(false);
         start.addActionListener(new ActionListener() {
             @Override
@@ -140,7 +150,7 @@ public class test2 extends JFrame {
         next = new JButton("następna iteracja");
         next.setBackground(Color.MAGENTA);
         next.setForeground(Color.white);
-        next.setBounds(95, 300, 150, 50);
+        next.setBounds(140, 300, 150, 50);
         next.setFocusPainted(false);
         next.addActionListener(new ActionListener() {
             @Override
@@ -154,7 +164,7 @@ public class test2 extends JFrame {
         reset = new JButton("reset");
         reset.setBackground(clr);
         reset.setForeground(Color.white);
-        reset.setBounds(255, 300, 115 , 50);
+        reset.setBounds(297, 300, 75 , 50);
         reset.setFocusPainted(false);
         reset.setHorizontalTextPosition(JButton.CENTER);
         reset.addActionListener(new ActionListener() {
@@ -165,12 +175,48 @@ public class test2 extends JFrame {
         });
         add(reset);
 
+
+        //liczba iteracji
+        iterations = new JLabel("liczba iteracji");
+        iterations.setBounds(175, 350, 100, 50);;
+        add(iterations);
+
+        //wczytanie liczby iteracji
+        numberIt = new JTextField();
+        numberIt.setBounds(140, 400, 150, 25);
+        numberIt.setHorizontalAlignment(JTextField.CENTER);
+        numberIt.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //zapisanie do struktury liczby iteracji do wykonania
+                int nr = (int)(Double.parseDouble(numberIt.getText()));
+                iterations.setText("liczba iteracji " + Integer.toString(nr) );
+            }
+        });
+        add(numberIt);
+
+        messeges = new JLabel();
+        messeges.setForeground(Color.BLUE);
+        messeges.setFont(new Font("Arial", Font.BOLD, 12));
+        messeges.setOpaque(true);
+        messeges.setBounds(30, 425,300, 30);
+        messeges.setVisible(true);
+        add(messeges);
+
         //wczytywanie z pliku
         load = new JButton("Wczytaj");
         load.setBackground(Color.BLUE);
         load.setForeground(Color.white);
-        load.setBounds(10, 375, 100, 50);
+        load.setBounds(30, 375, 100, 50);
         load.setFocusPainted(false);
+
+        loaded = new JLabel();
+        loaded.setForeground(Color.BLUE);
+        loaded.setFont(new Font("Arial", Font.PLAIN, 12));
+        loaded.setOpaque(true);
+        loaded.setBounds(30, 450,300, 30);
+        loaded.setVisible(false);
+        add(loaded);
         load.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
@@ -181,13 +227,10 @@ public class test2 extends JFrame {
                         System.out.println(gridObjects);
 
                         //DLACZEGO TO NIE DZIAŁA??? (nie wyświetla się label)
-                        loaded = new JLabel();
+
                         loaded.setText("wczytano z pliku:"+ input.getPath());
-                        loaded.setForeground(Color.BLACK);
-                        loaded.setFont(new Font("Arial", Font.PLAIN, 20));
-                        loaded.setOpaque(true);
-                        loaded.setBounds(10, 500,150, 50);
-                        add(loaded);
+                        loaded.setVisible(true);
+
 
                     } catch (FileNotFoundException ex) {
                         ex.printStackTrace();
@@ -203,15 +246,27 @@ public class test2 extends JFrame {
         save = new JButton("Zapisz");
         save.setBackground(Color.BLUE);
         save.setForeground(Color.white);
-        save.setBounds(270, 375, 100, 50);
+        save.setBounds(300, 375, 100, 50);
         save.setFocusPainted(false);
+
+        saved = new JLabel();
+        saved.setForeground(Color.BLUE);
+        saved.setFont(new Font("Arial", Font.PLAIN, 12));
+        saved.setOpaque(true);
+        saved.setBounds(30, 475,300, 30);
+        saved.setVisible(false);
+        add(saved);
+
         save.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
                 if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-                    File save = fileChooser.getSelectedFile();
+                    File output = fileChooser.getSelectedFile();
                     //zapis do pliku
+
+                    saved.setText("zapisano do pliku:"+ output.getPath());
+                    saved.setVisible(true);
                 }
             }
         });
@@ -219,9 +274,7 @@ public class test2 extends JFrame {
 
     }
 
-    private void initializeGrid(){
 
-    }
 
     public static void main(String args[]) {
         new test2();
