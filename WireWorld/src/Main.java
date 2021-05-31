@@ -1,22 +1,18 @@
-import Grid.*;
+import Grid.Grid;
+import GridObjectConverter.GridObjectConverter;
 import GridObjects.GridObjects;
 import TxtIO.TxtIO;
 
-import java.io.FileNotFoundException;
-
 public class Main {
     public static void main(String[] args) {
-//        Grid grid = new Grid();
-//        grid.addCell(new Cell(0,0,CellState.ELECTRONHEAD));
-//        grid.addCell(new Cell(1,0,CellState.ELECTRONHEAD));
-//        grid.addCell(new Cell(2,0,CellState.ELECTRONHEAD));
-//        grid.addCell(new Cell(2,2,CellState.ELECTRONHEAD));
-//        grid.nextIteration();
-//        System.out.println(grid);
         try {
+            int n = Integer.parseInt(args[0]);
             GridObjects gridObjects = TxtIO.readFromTxt("WireWorld/src/input.txt");
-            System.out.println(gridObjects);
-        } catch (FileNotFoundException e) {
+            Grid grid = GridObjectConverter.convertObjectsToGrid(gridObjects);
+            while (n-- != 0)
+                grid.nextIteration();
+            TxtIO.writeToTxt("WireWorld/src/output.txt", gridObjects, grid);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

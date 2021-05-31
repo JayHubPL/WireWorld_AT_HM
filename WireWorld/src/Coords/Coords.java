@@ -4,6 +4,14 @@ import java.util.Objects;
 import java.util.Vector;
 
 public class Coords {
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
     final private int x;
     final private int y;
     final static public Vector<Coords> nghbrhd = generateNghbrhd();

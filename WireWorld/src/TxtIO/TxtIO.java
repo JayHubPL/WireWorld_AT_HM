@@ -1,17 +1,17 @@
 package TxtIO;
 
 import Coords.Coords;
+import Grid.*;
 import GridObjects.*;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class TxtIO {
     public static GridObjects readFromTxt(String path) throws FileNotFoundException {
-        File inputFile = new File(path);
-        Scanner scanner = new Scanner(inputFile);
+        Scanner scanner = new Scanner(new File(path));
         GridObjects gridObjects = new GridObjects();
         while (scanner.hasNextLine()) {
             String data = scanner.nextLine();
@@ -24,8 +24,8 @@ public class TxtIO {
             GridObject gridObject = null;
             Orientation orientation = Orientation.NORMAL;
             if (a2.length > 2) {
-                String o = a2[2];
-                if (o.equals("Reversed")) {
+                String o = a2[2].toUpperCase(Locale.ROOT);
+                if (o.equals("REVERSED")) {
                     orientation = Orientation.REVERSED;
                 }
             }
@@ -40,7 +40,21 @@ public class TxtIO {
         scanner.close();
         return gridObjects;
     }
-    public static void writeToTxt(String path) {
-
+    public static void writeToTxt(String path, GridObjects gridObjects, Grid grid) throws IOException {
+        PrintWriter printWriter = new PrintWriter(new FileWriter(path));
+        for (GridObject gOb : gridObjects.getObjects()) {
+            String objectName = gOb.getClass().getSimpleName();
+            if (!(objectName.equals("ElectronHead") || objectName.equals("ElectronTail"))) {
+                printWriter.printf("%s: %d, %d, %s\n", objectName, gOb.getCoords().getX(), gOb.getCoords().getY(), gOb.getOrientation());
+            }
+        }
+        for (Cell c : grid.getGrid().values()) {
+            if (c.getCellState() == CellState.ELECTRONHEAD) {
+                printWriter.printf("%s: %d, %d\n", "ElectronHead", c.getCoords().getX(), c.getCoords().getY());
+            } else if (c.getCellState() == CellState.ELECTRONTAIL) {
+                printWriter.printf("%s: %d, %d\n", "ElectronTail", c.getCoords().getX(), c.getCoords().getY());
+            }
+        }
+        printWriter.close();
     }
 }
