@@ -23,6 +23,9 @@ public class Grid {
         for (Cell cell : grid.values()) {
             cell.countNghbrs(this);
         }
+        for (Cell cell : grid.values()) {
+            cell.updateState();
+        }
     }
 
     @Override

@@ -45,6 +45,18 @@ public class Cell {
         }
     }
 
+    public void updateState() { // TODO Add RulesInterface for rules and neighbourhood
+        switch (cellState) {
+            case CONDUCTOR -> {
+                if (nghbrs == 1 || nghbrs == 2) {
+                    cellState = CellState.ELECTRONHEAD;
+                }
+            }
+            case ELECTRONHEAD -> cellState = CellState.ELECTRONTAIL;
+            case ELECTRONTAIL -> cellState = CellState.CONDUCTOR;
+        }
+    }
+
     private final Coords coords;
     private CellState cellState;
     private int nghbrs;

@@ -7,6 +7,11 @@ import java.util.Vector;
 public abstract class GridObject {
     protected Coords relativePos;
     protected Vector<Coords> shape;
+
+    public Orientation getOrientation() {
+        return orientation;
+    }
+
     protected Orientation orientation;
 
     protected GridObject() {
@@ -19,7 +24,7 @@ public abstract class GridObject {
     }
 
     public Vector<Coords> getShape() {
-        return shape; // TODO maths for reversed
+        return shape;
     }
 
     @Override
