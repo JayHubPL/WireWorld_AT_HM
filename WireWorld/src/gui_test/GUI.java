@@ -5,6 +5,7 @@ import GridObjectConverter.GridObjectConverter;
 import GridObjects.GridObjects;
 import TxtIO.TxtIO;
 
+import javax.imageio.plugins.tiff.TIFFImageReadParam;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -27,8 +28,16 @@ public class GUI extends JFrame {
     private GridObjects gridObjects;
     private JTextField numberIt;
     private File inputFile;
+    private int iter;
+    private int currIter;
+    private boolean stopped;
+
 
     public GUI() {
+
+        iter = 5;
+        currIter = 0;
+        stopped = true;
 
         initializeFrame();
         // initializeGrid();
@@ -147,7 +156,32 @@ public class GUI extends JFrame {
         start.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //uruchomienie programu
+                if (!stopped) return;
+                currIter = 0;
+                stopped = false;
+                System.out.println(iter);
+                try {
+                    gridObjects = TxtIO.readFromTxt(inputFile.getPath());
+                    grid = GridObjectConverter.convertObjectsToGrid(gridObjects);
+                } catch (FileNotFoundException exception) {
+                    System.err.println("Plik wejsciowy nie moze byc ponownie wczytany.");
+                }
+                initializeGrid();
+                new Thread() {
+                    public void run() {
+                        while (++currIter < iter) {
+                            try {
+                                Thread.sleep(750);
+                            } catch (InterruptedException exception) {
+                                exception.printStackTrace();
+                            }
+                            if (stopped) return;
+                            grid.nextIteration();
+                            gridPanel.repaint();
+                        }
+                        stopped = true;
+                    }
+                }.start();
             }
         });
         add(start);
@@ -163,6 +197,7 @@ public class GUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 grid.nextIteration();
                 gridPanel.repaint();
+                currIter++;
             }
         });
         add(next);
@@ -181,6 +216,8 @@ public class GUI extends JFrame {
                     gridObjects = TxtIO.readFromTxt(inputFile.getPath());
                     grid = GridObjectConverter.convertObjectsToGrid(gridObjects);
                     initializeGrid();
+                    currIter = 0;
+                    stopped = true;
                 } catch (FileNotFoundException exception) {
                     System.err.println("Plik wejsciowy nie moze byc ponownie wczytany.");
                 }
@@ -202,8 +239,8 @@ public class GUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //zapisanie do struktury liczby iteracji do wykonania
-                int nr = (int)(Double.parseDouble(numberIt.getText()));
-                iterations.setText("liczba iteracji " + nr);
+                iter = (int)(Double.parseDouble(numberIt.getText()));
+                iterations.setText("liczba iteracji " + iter);
             }
         });
         add(numberIt);

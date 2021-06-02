@@ -5,13 +5,13 @@ import Coords.Coords;
 import java.util.Vector;
 
 public class Diode extends GridObject {
-    private static char[][] diodeShapeNormal = {
+    private final static char[][] diodeShapeNormal = {
             { 0, 0, 1, 1, 0, 0 },
             { 1, 1, 1, 0, 1, 1 },
             { 0, 0, 1, 1, 0, 0 }
     };
 
-    private static char[][] diodeShapeReversed = {
+    private final static char[][] diodeShapeReversed = {
             { 0, 0, 1, 1, 0, 0 },
             { 1, 1, 0, 1, 1, 1 },
             { 0, 0, 1, 1, 0, 0 }
