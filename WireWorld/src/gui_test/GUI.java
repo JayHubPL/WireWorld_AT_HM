@@ -1,6 +1,7 @@
 package gui_test;
 
 import Grid.Grid;
+import GridObjectConverter.GridObjectConverter;
 import GridObjects.GridObjects;
 import TxtIO.TxtIO;
 
@@ -10,25 +11,27 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public class test2 extends JFrame {
+public class GUI extends JFrame {
     private JLabel title, authors, loaded, saved, iterations, messeges;
     private JPanel toolBar, tHeader, gridPanel;
     private JTextField nrIterations;
     private JButton start, run, save, load, reset, next;
     private final JFileChooser fileChooser = new JFileChooser();
-    private Color clr = new Color(255, 0, 0);
+    private final Color clr = new Color(255, 0, 0);
     private Grid grid;
+    private GridObjects gridObjects;
     private JTextField numberIt;
+    private File inputFile;
 
-    test2() {
-
+    public GUI() {
 
         initializeFrame();
-        initializeGrid();
+        // initializeGrid();
         initializeMenu();
 
 
@@ -94,8 +97,6 @@ public class test2 extends JFrame {
 
     }
 
-
-
     private void initializeFrame(){
         setSize(450, 600);
         setTitle("WireWorld");
@@ -123,16 +124,19 @@ public class test2 extends JFrame {
 
     }
 
-    private void initializeGrid(){
-        gridPanel = new JPanel();
+    private void initializeGrid() {
+        if (gridPanel != null) {
+            this.remove(gridPanel);
+        }
+        gridPanel = new Board(grid);
         gridPanel.setBackground(Color.black);
         gridPanel.setBounds(30, 75, 375, 200);
         //gridPanel.setLayout((new BorderLayout()));
         gridPanel.setVisible(true);
-        //
-
         add(gridPanel);
+        gridPanel.repaint();
     }
+
     private void initializeMenu(){
 
         start = new JButton("Start");
@@ -157,7 +161,8 @@ public class test2 extends JFrame {
         next.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //grid.nextIteration();
+                grid.nextIteration();
+                gridPanel.repaint();
             }
         });
         add(next);
@@ -172,7 +177,13 @@ public class test2 extends JFrame {
         reset.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //co sie dzieje po resecie - wartosci z powrotem na domyślne
+                try {
+                    gridObjects = TxtIO.readFromTxt(inputFile.getPath());
+                    grid = GridObjectConverter.convertObjectsToGrid(gridObjects);
+                    initializeGrid();
+                } catch (FileNotFoundException exception) {
+                    System.err.println("Plik wejsciowy nie moze byc ponownie wczytany.");
+                }
             }
         });
         add(reset);
@@ -180,7 +191,7 @@ public class test2 extends JFrame {
 
         //liczba iteracji
         iterations = new JLabel("liczba iteracji");
-        iterations.setBounds(175, 350, 100, 50);;
+        iterations.setBounds(175, 350, 100, 50);
         add(iterations);
 
         //wczytanie liczby iteracji
@@ -192,7 +203,7 @@ public class test2 extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 //zapisanie do struktury liczby iteracji do wykonania
                 int nr = (int)(Double.parseDouble(numberIt.getText()));
-                iterations.setText("liczba iteracji " + Integer.toString(nr) );
+                iterations.setText("liczba iteracji " + nr);
             }
         });
         add(numberIt);
@@ -222,23 +233,24 @@ public class test2 extends JFrame {
         load.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                    File input = fileChooser.getSelectedFile();
+                    inputFile = fileChooser.getSelectedFile();
                     try {
-                        GridObjects gridObjects = TxtIO.readFromTxt(input.getPath());
+                        GridObjects gridObjects = TxtIO.readFromTxt(inputFile.getPath());
                         System.out.println("\nWczytane obiekty:\n");
                         System.out.println(gridObjects);
 
                         //DLACZEGO TO NIE DZIAŁA??? (nie wyświetla się label)
 
-                        loaded.setText("wczytano z pliku:"+ input.getPath());
+                        loaded.setText("wczytano z pliku:"+ inputFile.getPath());
                         loaded.setVisible(true);
 
+                        gridObjects = TxtIO.readFromTxt(inputFile.getPath());
+                        grid = GridObjectConverter.convertObjectsToGrid(gridObjects);
 
+                        initializeGrid();
                     } catch (FileNotFoundException ex) {
                         ex.printStackTrace();
                     }
-
-                   //załadowanie pliku do struktury
                 }
             }
         });
@@ -266,7 +278,11 @@ public class test2 extends JFrame {
                 if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
                     File output = fileChooser.getSelectedFile();
                     //zapis do pliku
-
+                    try {
+                        TxtIO.writeToTxt(output.getPath(), gridObjects, grid);
+                    } catch (IOException exception) {
+                        System.err.println("Blad wypisywania do pliku");
+                    }
                     saved.setText("zapisano do pliku:"+ output.getPath());
                     saved.setVisible(true);
                 }
@@ -276,10 +292,7 @@ public class test2 extends JFrame {
 
     }
 
-
-
-    public static void main(String args[]) {
-        new test2();
-
-    }
+//    public static void main(String args[]) {
+//        new GUI();
+//    }
 }

@@ -40,6 +40,7 @@ public class TxtIO {
         scanner.close();
         return gridObjects;
     }
+
     public static void writeToTxt(String path, GridObjects gridObjects, Grid grid) throws IOException {
         PrintWriter printWriter = new PrintWriter(new FileWriter(path));
         for (GridObject gOb : gridObjects.getObjects()) {
