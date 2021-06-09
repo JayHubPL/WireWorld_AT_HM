@@ -1,41 +1,47 @@
 package Grid;
 
 import Coords.Coords;
+import Ruleset.ClassicRuleset;
+import Ruleset.Ruleset;
 
 import java.util.HashMap;
 
 public class Grid {
-    public Grid() {
-        grid = new HashMap<>();
+    private final HashMap<Coords, Cell> grid;
+    private final Ruleset ruleset;
+
+    public Grid(HashMap<Coords, Cell> grid, Ruleset ruleset) {
+        this.grid = grid;
+        this.ruleset = ruleset;
     }
 
     public Grid(HashMap<Coords, Cell> grid) {
-        this.grid = grid;
+        this(grid, new ClassicRuleset());
     }
 
     public HashMap<Coords, Cell> getGrid() {
         return grid;
     }
 
-    private HashMap<Coords, Cell> grid;
+    public void updateNghbrsCount() {
+        for (Cell cell : grid.values()) {
+            int nghbrs = 0;
+            for (Coords shift : ruleset.getNghbrhd()) {
+                Coords shifted = Coords.add(shift, cell.getCoords());
+                if (grid.containsKey(shifted)) {
+                    if (grid.get(shifted).getCellState() == CellState.ELECTRONHEAD) {
+                        nghbrs++;
+                    }
+                }
+            }
+            cell.setNghbrs(nghbrs);
+        }
+    }
 
     public void nextIteration() {
+        updateNghbrsCount();
         for (Cell cell : grid.values()) {
-            cell.countNghbrs(this);
+            ruleset.updateState(cell);
         }
-        for (Cell cell : grid.values()) {
-            cell.updateState();
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "Grid{" +
-                "grid=" + grid +
-                '}';
-    }
-
-    public void addCell(Cell cell) {
-        grid.put(cell.getCoords(), cell);
     }
 }

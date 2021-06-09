@@ -5,18 +5,29 @@ import Coords.Coords;
 import java.util.Vector;
 
 public abstract class GridObject {
+    protected final Vector<Coords> shape;
     protected Coords relativePos;
-    protected Vector<Coords> shape;
+    protected Orientation orientation;
+
+    GridObject() {
+        shape = new Vector<>();
+    }
+
+    protected GridObject(Coords relativePos, Orientation orientation) {
+        this();
+        this.relativePos = relativePos;
+        this.orientation = orientation;
+        setShape();
+    }
+
+    protected GridObject(Coords relativePos) {
+        this(relativePos, Orientation.NORMAL);
+    }
+
+    abstract void setShape();
 
     public Orientation getOrientation() {
         return orientation;
-    }
-
-    protected Orientation orientation;
-
-    protected GridObject() {
-        shape = new Vector<>();
-        orientation = Orientation.NORMAL;
     }
 
     public Coords getCoords() {
@@ -25,13 +36,5 @@ public abstract class GridObject {
 
     public Vector<Coords> getShape() {
         return shape;
-    }
-
-    @Override
-    public String toString() {
-        return "GridObject{" +
-                "relativePos=" + relativePos +
-                ", shape=" + shape +
-                '}';
     }
 }
